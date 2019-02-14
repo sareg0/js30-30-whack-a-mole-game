@@ -36,14 +36,24 @@
   const holes = document.querySelectorAll('.hole');
   const scoreBoard = document.querySelector('.score');
   const moles = document.querySelectorAll('.mole');
+  let score;
+
+  moles.forEach((mole) => {
+    mole.addEventListener('click', whack)
+  })
 
   const GAME_TIME = 10
 
   function startGame () {
     min = Math.ceil(0)
-    max = Math.floor(moles.length - 1)
+    max = Math.floor(holes.length)
     const thing = Math.floor(Math.random() * (max - min)) + min;
+    holes[thing].classList.add('up')
     console.log(thing)
+  }
+
+  function whack () {
+    this.parentElement.classList.remove('up')
   }
 
 
