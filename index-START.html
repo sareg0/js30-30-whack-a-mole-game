@@ -46,6 +46,8 @@
   const GAME_TIME = 10
 
   function startGame () {
+    score = 0
+    scoreBoard.textContent = score
     clearInterval(game)
     min = Math.ceil(0)
     max = Math.floor(holes.length)    
