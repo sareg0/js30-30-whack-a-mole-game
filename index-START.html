@@ -38,39 +38,54 @@
   const moles = document.querySelectorAll('.mole');
   let score = 0
   let game
+  let lastHole
+  let timesUp = false
+  const GAME_TIME = 10000
 
   moles.forEach((mole) => {
     mole.addEventListener('click', whack)
   })
 
-  const GAME_TIME = 10
+
+  function randomSpeed (min, max) {
+    return Math.round(Math.random() * (max - min) + min)
+  }
+
+  function randomHole (holes) {
+    const randomIndex = Math.floor(Math.random() * holes.length);
+    const hole = holes[randomIndex]
+
+    if (hole == lastHole) {
+      return randomHole(holes)
+    }
+    console.log(hole)
+
+    lastHole = hole
+    return hole
+  }
 
   function startGame () {
     score = 0
     scoreBoard.textContent = score
-    clearInterval(game)
-    min = Math.ceil(0)
-    max = Math.floor(holes.length)    
-    
-    let timeLeft = GAME_TIME
-    
-    game = setInterval(() => {
-      const thing = Math.floor(Math.random() * (max - min)) + min;
-      toggleMole(thing)
-      timeLeft--
-      if (timeLeft < 1) {
-        clearInterval(game)
-      }
-    }, 1000)
+    timesUp = false
+    toggleMole()
+    clearTimeout(game)
+    game = setTimeout(() => {
+      timesUp = true
+      clearTimeout(game)
+    }, GAME_TIME)
   }
 
   function toggleMole (index) {
+    const time = randomSpeed(200, 1000)
+    const hole = randomHole(holes)
+    hole.classList.add('up')
     let timeout
-    holes[index].classList.add('up')
     timeout = setTimeout(() => {
-      holes[index].classList.remove('up')
+      hole.classList.remove('up')
+      if (!timesUp) toggleMole()
       clearTimeout(timeout)
-    }, 1000)
+    }, time)
   }
 
   function whack () {
